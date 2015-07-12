@@ -1,0 +1,37 @@
+主要思想从右到左扫面如果出现右边大于左边
+找到右边所有数中比左边数大的最小数和左边交换，后边排序，变成最小序
+如果全部都是逆序，则表示需要整个重排
+1 2  3
+1 3  2
+2 1  3
+2 3  1
+3 1  2
+3 2  1
+1 2  3
+class Solution {
+public:
+    void nextPermutation(vector<int>& nums) {
+        int i = nums.size()-1;
+        for(;i>0;--i){
+            if(nums[i]>nums[i-1]) break;
+        }
+        if(i == 0) reverse(nums.begin(),nums.end());
+        else{
+            int minIndex = i-1;
+            for(int j = i;j<nums.size();++j){
+               if(nums[j] > nums[i-1]){
+                   if(minIndex == i -1){
+                       minIndex = j;
+                   }
+                   else if(nums[minIndex] >= nums[j]){
+                       minIndex = j;
+                   }
+               }
+            }
+
+            swap(nums[i-1],nums[minIndex]);
+            sort(nums.begin()+i,nums.end());
+        }
+
+    }
+};
