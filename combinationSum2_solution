@@ -1,0 +1,31 @@
+class Solution {
+    void getResult(vector<vector<int>> &ret,vector<int>& candidates,vector<int> path,int index,int target){
+        if(target == 0){
+            ret.push_back(path);
+            return;
+        }
+        if(index >= candidates.size() || target < 0) return;
+
+        if(target >= candidates[index]) {
+            path.push_back(candidates[index]);
+            getResult(ret, candidates, path, index + 1, target - candidates[index]);
+            path.pop_back();
+            ++index;
+            //避免重复 如果出现重复数 包括了第一个重复数的解必然包括后面以相同数开始的数的解
+            //去掉重复解即可
+            while(index < candidates.size() && candidates[index] == candidates[index-1])
+                ++index;
+            if(index < candidates.size())
+                getResult(ret, candidates, path, index, target);
+        }
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int> > ret;
+        if(candidates.empty()) return ret;
+        vector<int> path;
+        sort(candidates.begin(),candidates.end());
+        getResult(ret,candidates,path,0,target);
+        return ret;
+    }
+};
