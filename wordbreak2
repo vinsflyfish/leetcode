@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<string> wordBreak(string s, unordered_set<string>& wordDict) {
+        vector<string> result;
+        if(s.empty() || wordDict.empty()) return result;
+        unordered_map<int,vector<int>> prev;
+        for(auto item : wordDict){
+            if(s.substr(0,item.size()) == item){
+                prev[item.size()-1].push_back(0);
+            }
+        }
+        for(int i = 1;i<s.size();++i){
+            if(prev[i-1].empty()) continue;
+            for(auto item : wordDict){
+                if(s.substr(i,item.size()) == item){
+                    prev[i + item.size()-1].push_back(i);
+                }
+            }
+        }
+        vector<string> path;
+        vector<vector<string>> ret;
+        getPath(ret,path,prev,s.size()-1,s);
+        for(auto row : ret){
+            string tmp;
+            for(auto col : row){
+                if(tmp.empty()){
+                    tmp = col;
+                }
+                else
+                tmp = col +" "+ tmp;
+            }
+            result.push_back(tmp);
+        }
+        return result;
+    }
+
+    void getPath(vector<vector<string>> &ret,vector<string> &path,unordered_map<int,vector<int>> &prev,int index,string &s){
+        vector<int> cur = prev[index];
+        for(auto i : cur){
+            if(i ==0){
+                path.push_back(s.substr(i,index-i+1));
+                ret.push_back(path);
+                path.pop_back();
+            }
+            else{
+                path.push_back(s.substr(i,index-i+1));
+                getPath(ret,path,prev,i- 1,s);
+                path.pop_back();
+            }
+        }
+    }
+};
