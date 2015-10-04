@@ -1,0 +1,35 @@
+// reference code src : http://www.geeksforgeeks.org/largest-rectangle-under-histogram/
+//using stack to record current rectangle left and righ bound,left bound is in stack,
+//the current index is right bound
+//it's a great solution for learning!
+
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& height) {
+        if(height.empty()) return 0;
+        stack<int> st;
+        int index = 0;
+        int result = INT_MIN;
+        while(index< height.size()){
+            if(st.empty() || height[index]>=height[st.top()]){
+                st.push(index++);
+            }
+            else{
+                int top = st.top();st.pop();
+                int curMax = height[top] * ( st.empty() ?  index : index - st.top()-1);
+                if(curMax > result){
+                    result = curMax;
+                }
+            }
+        }
+        while(!st.empty()){
+            int top =  st.top();st.pop();
+            int curMax = height[top] * ( st.empty() ?  index : index - st.top()-1);
+            if(curMax > result){
+                result = curMax;
+            }
+        }
+        return result;
+    }
+};
