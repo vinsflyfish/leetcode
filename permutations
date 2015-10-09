@@ -1,0 +1,21 @@
+class Solution {
+	void permuteKth(vector<int> &nums, int i, vector<vector<int>> &ret){
+		if (i == nums.size() - 1){
+			ret.push_back(nums);
+		}
+		else{
+			for (int j = i; j < nums.size(); ++j){
+				swap(nums[i], nums[j]);
+				permuteKth(nums, i + 1, ret);
+				swap(nums[i], nums[j]);
+			}
+		}
+	}
+public:
+	vector<vector<int>> permute(vector<int>& nums) {
+		vector<vector<int>> ret;
+		vector<int> path(nums);
+		permuteKth(nums, 0, ret);
+		return ret;
+	}
+};
