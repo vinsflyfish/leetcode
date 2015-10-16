@@ -1,0 +1,53 @@
+Given a binary tree, find the maximum path sum.
+
+For this problem, a path is defined as any sequence of nodes from some starting node to any node in the tree along the parent-child connections. The path does not need to go through the root.
+
+For example:
+Given the below binary tree,
+
+       1
+      / \
+     2   3
+Return 6.
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    //返回包含该节点的最大和时，同时返回包含该节点的最长路径长度，如左子树，右子树
+    int maxPathSum(TreeNode *root,int &maxPath){
+        if(root->left == NULL && root->right == NULL){
+            maxPath = root->val;
+            return root->val;
+        }
+        else{
+            int l = INT_MIN,r = INT_MIN;
+            int lPath = 0,rPath = 0;
+            if(root->left!=NULL){
+                l = maxPathSum(root->left,lPath);
+            }
+            if(root->right!=NULL){
+                r = maxPathSum(root->right,rPath);
+            }
+            //当前最大路劲等于包含当前节点值 加上 最大的最孩子路径 或者 最大的有孩子路径
+            maxPath = max(max(lPath,rPath),0) + root->val;
+            int ret = root->val + (lPath > 0 ? lPath : 0) + (rPath > 0 ? rPath : 0);
+            if(ret < l) ret = l;
+            if(ret < r) ret = r;
+            return ret;
+        }
+    }
+public:
+    int maxPathSum(TreeNode* root) {
+        if(root == NULL) return 0;
+        if(root->left == NULL && root->right == NULL) return root->val;
+        int maxPath = 0;
+        return maxPathSum(root,maxPath);
+    }
+};
